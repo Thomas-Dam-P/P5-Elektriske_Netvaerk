@@ -10,10 +10,10 @@ d=as.matrix(d)
 x=read.table("x.txt")
 x=as.matrix(x)
 invsqrtSigma=solve(sqrt(Sigma))
-invsqrtSigma
 dtilde=invsqrtSigma%*%d
 Dtilde=invsqrtSigma%*%D
 DTD=t(Dtilde)%*%Dtilde
 Nulm=matrix(rep(0,324),18,18)
 A=matrix(c(rbind(DTD,C),rbind(t(C),Nulm)),55,55)
 print(rref(A))
+# solve(A)%*%c(Dtilde%*%dtilde,rep(0,18))
