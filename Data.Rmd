@@ -1,0 +1,28 @@
+---
+title: "Projekt"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+```{r, setup, include=FALSE}
+require(mosaic)   # Load additional packages here # Some customization.  You can alter or delete as desired (if you know what you are doing).
+#set.seed=1000, set a seed if you want to have reproducible results
+#trellis.par.set(theme=theme.mosaic()) # change default color scheme for lattice
+knitr::opts_chunk$set(
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+```
+
+```{r}
+Data <- read.table('R_small_grid.txt')
+```
+
+```{r}
+datamatrix<-as.matrix(Data)
+t(datamatrix)
+```
