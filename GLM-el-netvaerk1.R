@@ -1,7 +1,7 @@
 library("pracma")
 Sigma=read.table("Sigma.txt")
 Sigma=as.matrix(Sigma)
-C=read.table("C.txt")
+C=read.table("Cny.txt")
 C=as.matrix(C)
 D=read.table("D.txt")
 D=as.matrix(D)
@@ -13,7 +13,7 @@ invsqrtSigma=solve(sqrt(Sigma))
 dtilde=invsqrtSigma%*%d
 Dtilde=invsqrtSigma%*%D
 DTD=t(Dtilde)%*%Dtilde
-Nulm=matrix(rep(0,324),18,18)
-A=matrix(c(rbind(DTD,C),rbind(t(C),Nulm)),55,55)
-print(rref(A))
-# solve(A)%*%c(Dtilde%*%dtilde,rep(0,18))
+Nulm=matrix(rep(0,676),26,26)
+A=matrix(c(rbind(DTD,C),rbind(t(C),Nulm)),63,63)
+Beta=solve(A)%*%c(t(Dtilde)%*%dtilde,rep(0,26))
+Beta[1:37]
