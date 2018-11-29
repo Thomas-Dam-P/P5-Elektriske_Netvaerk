@@ -25,13 +25,10 @@ for(i in 1:50)
   Beta=solve(A)%*%c(t(Dtilde)%*%dtilde,rep(0,26))
 }
 Beta[1:37]
-konfU17m=Beta[35]-1.959963984540*sqrt(solve(A)[35,35])
-konfU17p=Beta[35]+1.959963984540*sqrt(solve(A)[35,35])
-i=1
-nedre=c()
-konf=list()
+konf=matrix(rep(0,74),37,2)
 for(i in 1:37)
 {
-  konf=list(konf,c(Beta[i]-1.959963984540*sqrt(solve(A)[i,i]),Beta[i]+1.959963984540*sqrt(solve(A)[i,i])))
+  konf[i,1]=Beta[i]-1.959963984540*sqrt(solve(A)[i,i])
+  konf[i,2]=Beta[i]+1.959963984540*sqrt(solve(A)[i,i])
 }
 konf
