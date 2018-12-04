@@ -41,64 +41,64 @@ for(i in 1:37)
 }
 konf#Konfidensintervaller for parametrene:
 z=c()
-T=360
+T=390
 for(i in 19:37)
 {
   z=c(z,(Beta[i]-T)/sqrt(Ainv[i,i])) #Wald's test
 }
 z
-pnorm(z)# p-værdier udregnes. De giver alle tal større end 0.05, så vi kan for hver knude sige med 95% sikkerhed, at den knude ikke har en spænding under 360V.
-simdata=rnorm(37,mean=Beta[1:37],sd=abs(Beta[1:37])*0.01)
-Sigma=diag((Beta[1:37]*0.01)^2)#diag(37)
-D=diag(rep(1,37))
-invsqrtSigma=solve(sqrt(Sigma))
-dtilde=invsqrtSigma%*%simdata
-Dtilde=invsqrtSigma%*%D
-DTD=t(Dtilde)%*%Dtilde
-Nulm=matrix(rep(0,676),26,26)
-A=matrix(c(rbind(DTD,C),rbind(t(C),Nulm)),63,63)
-Ainv=solve(A)
-Beta=Ainv%*%c(t(Dtilde)%*%dtilde,rep(0,26))
-Beta[1:37]
-P=Dtilde%*%Ainv[1:37,1:37]%*%t(Dtilde)
-plot((dtilde-P%*%dtilde)[19:37])#Residualplot i forhold til indeks
-plot((sqrt(Sigma)%*%(P%*%dtilde))[1:18],(dtilde-P%*%dtilde)[1:18])#residualplot ift fittede værdier
-P%*%dtilde
-P%*%simdata
-P
-(dtilde-P%*%dtilde)#residualer på den ene måde
-dtilde-Dtilde%*%Beta[1:37]#residualer på den anden måde
-Beta[1:18]
-(sqrt(Sigma)%*%(P%*%dtilde))[1:18]
-lev=c()
-for(i in 1:37)
-{
-  lev=c(lev,P[i,i])
-}
-d=simdata
-for(i in 1:37)
-{
-  if(min(lev)<0.9999999999)
-  {
-    remove=match(min(lev),lev)
-    Sigma=Sigma[-remove,-remove]
-    D=D[-remove,]
-    d=d[-remove]
-    invsqrtSigma=solve(sqrt(Sigma))
-    Dtilde=invsqrtSigma%*%D
-    DTD=t(Dtilde)%*%Dtilde
-    A=matrix(c(rbind(DTD,C),rbind(t(C),Nulm)),63,63)
-    Ainv=solve(A)
-    P=Dtilde%*%Ainv[1:37,1:37]%*%t(Dtilde)
-    lev=c()
-    for(j in 1:length(d))
-    {
-      lev=c(lev,P[j,j])
-    }
-    print(lev)
-  }
-}
-D
+pnorm(z)# p-værdier udregnes. hvis p-værdien er over 0.95, så kan vi med 95% sikkerhed sige, at den knude ikke har spænding lavere end T.
+# simdata=rnorm(37,mean=Beta[1:37],sd=abs(Beta[1:37])*0.01)
+# Sigma=diag((Beta[1:37]*0.01)^2)#diag(37)
+# D=diag(rep(1,37))
+# invsqrtSigma=solve(sqrt(Sigma))
+# dtilde=invsqrtSigma%*%simdata
+# Dtilde=invsqrtSigma%*%D
+# DTD=t(Dtilde)%*%Dtilde
+# Nulm=matrix(rep(0,676),26,26)
+# A=matrix(c(rbind(DTD,C),rbind(t(C),Nulm)),63,63)
+# Ainv=solve(A)
+# Beta=Ainv%*%c(t(Dtilde)%*%dtilde,rep(0,26))
+# Beta[1:37]
+# P=Dtilde%*%Ainv[1:37,1:37]%*%t(Dtilde)
+# plot((dtilde-P%*%dtilde)[19:37])#Residualplot i forhold til indeks
+# plot((sqrt(Sigma)%*%(P%*%dtilde))[1:18],(dtilde-P%*%dtilde)[1:18])#residualplot ift fittede værdier
+# P%*%dtilde
+# P%*%simdata
+# P
+# (dtilde-P%*%dtilde)#residualer på den ene måde
+# dtilde-Dtilde%*%Beta[1:37]#residualer på den anden måde
+# Beta[1:18]
+# (sqrt(Sigma)%*%(P%*%dtilde))[1:18]
+# lev=c()
+# for(i in 1:37)
+# {
+#   lev=c(lev,P[i,i])
+# }
+# d=simdata
+# for(i in 1:37)
+# {
+#   if(min(lev)<0.9999999999)
+#   {
+#     remove=match(min(lev),lev)
+#     Sigma=Sigma[-remove,-remove]
+#     D=D[-remove,]
+#     d=d[-remove]
+#     invsqrtSigma=solve(sqrt(Sigma))
+#     Dtilde=invsqrtSigma%*%D
+#     DTD=t(Dtilde)%*%Dtilde
+#     A=matrix(c(rbind(DTD,C),rbind(t(C),Nulm)),63,63)
+#     Ainv=solve(A)
+#     P=Dtilde%*%Ainv[1:37,1:37]%*%t(Dtilde)
+#     lev=c()
+#     for(j in 1:length(d))
+#     {
+#       lev=c(lev,P[j,j])
+#     }
+#     print(lev)
+#   }
+# }
+# D
 # c(Beta[2:3],Beta[6],Beta[8],Beta[10],Beta[12],Beta[14],Beta[16:19])
 # d=rnorm(11,mean=c(Beta[2:3],Beta[6],Beta[8],Beta[10],Beta[12],Beta[14],Beta[16:19]),sd=sqrt((c(Beta[2:3],Beta[6],Beta[8],Beta[10],Beta[12],Beta[14],Beta[16:19])*0.01)^2))
 # Sigma=diag((d*0.01)^2)
