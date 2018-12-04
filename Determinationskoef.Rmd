@@ -1,0 +1,63 @@
+---
+title: "Determinationskoef"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Determinationskoeficient eksempel med udgangspunkt i datasættet cars:
+```{r}
+plot.default(cars,ylab ="y",xlab="x")
+```
+
+Data:
+```{r}
+y<-cars$dist
+x1<-cars$speed
+data<-matrix(c(y,x1),50,2)
+colnames(data)<-c("y-værdier","x-værdier")
+print(data)
+```
+
+Første søjle i designmatrix:
+```{r}
+k<-c(rep.int(1,50))
+```
+
+Designmatrix og transponeret designmatrix:
+```{r}
+X<-matrix(c(k,x1),50,2)
+tX<-t(X)
+print(X)
+print(tX)
+```
+
+Hatmatrix og hatmatrice for null modellen:
+```{r}
+P1<-X%*%solve(tX%*%X)%*%tX
+P0<-k%*%solve(t(k)%*%k)%*%t(k)
+```
+
+Devians beregnes:
+```{r}
+devians0<-t(c(y-P0%*%y))%*%c(y-P0%*%y) 
+devians1<-t(c(P1%*%y-P0%*%y))%*%c(P1%*%y-P0%*%y)
+devians2<-t(c(y-P1%*%y))%*%c(y-P1%*%y)
+```
+
+Beregning af determinationskoefficient:
+```{r}
+R2<-round(devians1/devians0,3)
+print(paste("Determinationskoefficent er da",R2))
+```
+
+Beregning af den justerede determinationskoefficient: 
+```{r}
+a<-devians2/(50-2)
+b<-devians0/(50-1)
+c<-a/b
+R2adj1<-round(1-c,3)
+print(paste("Den justerede determinationskoefficent er da",R2adj1))
+```
