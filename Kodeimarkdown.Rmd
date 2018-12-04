@@ -1,0 +1,139 @@
+---
+title: "PrÃ¸ve"
+output:
+  html_document:
+    highlight: haddock
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{#numCode .R .numberLines}
+
+```
+
+```{r, echo=FALSE}
+
+```
+
+
+
+```{#numCode .R .numberLines}
+R=read.table("Cny.txt")
+R=as.matrix(R)
+X=read.table("D.txt")
+X=as.matrix(X)
+effekt=read.table("effekt.txt")
+effekt=as.matrix(effekt)
+y=c(effekt/400,400)
+Sigma=diag((y*0.01)^2)
+invsqrtSigma=solve(sqrt(Sigma))
+ytilde=invsqrtSigma%*%y
+Xtilde=invsqrtSigma%*%X
+XTX=t(Xtilde)%*%Xtilde
+Nulm=matrix(rep(0,676),26,26)
+A=matrix(c(rbind(XTX,R),rbind(t(R),Nulm)),63,63)
+Ainv=solve(A)
+Beta=Ainv%*%c(t(Xtilde)%*%ytilde,rep(0,26))
+Beta[1:37]
+```
+
+```{r, echo=FALSE}
+library("pracma")
+R=read.table("Cny.txt")
+R=as.matrix(R)
+X=read.table("D.txt")
+X=as.matrix(X)
+effekt=read.table("effekt.txt")
+effekt=as.matrix(effekt)
+y=c(effekt/400,400)
+Sigma=diag((y*0.01)^2)
+invsqrtSigma=solve(sqrt(Sigma))
+ytilde=invsqrtSigma%*%y
+Xtilde=invsqrtSigma%*%X
+XTX=t(Xtilde)%*%Xtilde
+Nulm=matrix(rep(0,676),26,26)
+A=matrix(c(rbind(XTX,R),rbind(t(R),Nulm)),63,63)
+Ainv=solve(A)
+Beta=Ainv%*%c(t(Xtilde)%*%ytilde,rep(0,26))
+Beta[1:37]
+```
+
+
+```{#numCode .R .numberLines}
+for(i in 1:500)
+{
+  y=c(effekt/c(Beta[21:22],Beta[25],Beta[27],Beta[29],Beta[31],Beta[33],Beta[35:37]),400)
+  Sigma=diag((y*0.01)^2)
+  invsqrtSigma=solve(sqrt(Sigma))
+  ytilde=invsqrtSigma%*%y
+  Xtilde=invsqrtSigma%*%X
+  XTX=t(Xtilde)%*%Xtilde
+  A=matrix(c(rbind(XTX,R),rbind(t(R),Nulm)),63,63)
+  Ainv=solve(A)
+  Beta=Ainv%*%c(t(Xtilde)%*%ytilde,rep(0,26))
+}
+Beta[1:37]
+```
+
+```{r, echo=FALSE}
+for(i in 1:500)
+{
+  y=c(effekt/c(Beta[21:22],Beta[25],Beta[27],Beta[29],Beta[31],Beta[33],Beta[35:37]),400)
+  Sigma=diag((y*0.01)^2)
+  invsqrtSigma=solve(sqrt(Sigma))
+  ytilde=invsqrtSigma%*%y
+  Xtilde=invsqrtSigma%*%X
+  XTX=t(Xtilde)%*%Xtilde
+  A=matrix(c(rbind(XTX,R),rbind(t(R),Nulm)),63,63)
+  Ainv=solve(A)
+  Beta=Ainv%*%c(t(Xtilde)%*%ytilde,rep(0,26))
+}
+Beta[1:37]
+```
+
+
+
+```{#numCode .R .numberLines}
+konf=matrix(rep(0,74),37,2)
+for(i in 1:37)
+{
+  konf[i,1]=Beta[i]-1.959963984540*sqrt(Ainv[i,i])
+  konf[i,2]=Beta[i]+1.959963984540*sqrt(Ainv[i,i])
+}
+konf
+```
+
+```{r, echo=FALSE}
+konf=matrix(rep(0,74),37,2)
+for(i in 1:37)
+{
+  konf[i,1]=Beta[i]-1.959963984540*sqrt(Ainv[i,i])
+  konf[i,2]=Beta[i]+1.959963984540*sqrt(Ainv[i,i])
+}
+konf
+```
+
+
+```{#numCode .R .numberLines}
+z=c()
+T=360
+for(i in 19:37)
+{
+  z=c(z,(Beta[i]-T)/sqrt(Ainv[i,i]))
+}
+z
+pnorm(z)
+```
+
+```{r, echo=FALSE}
+z=c()
+T=360
+for(i in 19:37)
+{
+  z=c(z,(Beta[i]-T)/sqrt(Ainv[i,i])) #Wald's test
+}
+z
+pnorm(z)
+```
