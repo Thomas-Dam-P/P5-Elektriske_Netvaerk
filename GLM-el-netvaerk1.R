@@ -70,7 +70,7 @@ pnorm(z)# p-værdier udregnes. De giver alle tal større end 0.05, så vi kan fo
 # }
 # remove=match(min(lev),lev)
 simdata=rnorm(37,mean=Beta[1:37],sd=sqrt(Beta[1:37]^2)*0.01)
-Sigma=diag((Beta[1:37]*0.01)^2)
+Sigma=diag(37)#diag((Beta[1:37]*0.01)^2)
 D=diag(rep(1,37))
 invsqrtSigma=solve(sqrt(Sigma))
 dtilde=invsqrtSigma%*%simdata
