@@ -29,4 +29,4 @@ b<-devians0/(50-1)
 c<-a/b
 R2adj1<-round(1-c,3)
 print(paste("Den justerede determinationskoefficent er da",R2adj1)) 
-g
+gf
