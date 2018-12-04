@@ -240,27 +240,6 @@ print(X)</code></pre>
 ## [48,]    1   24  576
 ## [49,]    1   24  576
 ## [50,]    1   25  625</code></pre>
-<pre class="r"><code>print(tX)</code></pre>
-<pre><code>##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13]
-## [1,]    1    1    1    1    1    1    1    1    1     1     1     1     1
-## [2,]    4    4    7    7    8    9   10   10   10    11    11    12    12
-## [3,]   16   16   49   49   64   81  100  100  100   121   121   144   144
-##      [,14] [,15] [,16] [,17] [,18] [,19] [,20] [,21] [,22] [,23] [,24]
-## [1,]     1     1     1     1     1     1     1     1     1     1     1
-## [2,]    12    12    13    13    13    13    14    14    14    14    15
-## [3,]   144   144   169   169   169   169   196   196   196   196   225
-##      [,25] [,26] [,27] [,28] [,29] [,30] [,31] [,32] [,33] [,34] [,35]
-## [1,]     1     1     1     1     1     1     1     1     1     1     1
-## [2,]    15    15    16    16    17    17    17    18    18    18    18
-## [3,]   225   225   256   256   289   289   289   324   324   324   324
-##      [,36] [,37] [,38] [,39] [,40] [,41] [,42] [,43] [,44] [,45] [,46]
-## [1,]     1     1     1     1     1     1     1     1     1     1     1
-## [2,]    19    19    19    20    20    20    20    20    22    23    24
-## [3,]   361   361   361   400   400   400   400   400   484   529   576
-##      [,47] [,48] [,49] [,50]
-## [1,]     1     1     1     1
-## [2,]    24    24    24    25
-## [3,]   576   576   576   625</code></pre>
 <p>Hatmatrix og hatmatrice for null modellen:</p>
 <pre class="r"><code>P1&lt;-X%*%solve(tX%*%X)%*%tX
 P0&lt;-k%*%solve(t(k)%*%k)%*%t(k)</code></pre>
@@ -268,13 +247,14 @@ P0&lt;-k%*%solve(t(k)%*%k)%*%t(k)</code></pre>
 <pre class="r"><code>devians0&lt;-t(c(P1%*%y-P0%*%y))%*%c(P1%*%y-P0%*%y)
 devians1&lt;-t(c(y-P1%*%y))%*%c(y-P1%*%y)
 devians2&lt;-t(c(y-P0%*%y))%*%c(y-P0%*%y) </code></pre>
-<p>den justerede determinationskoefficient for model 1 og model 2 beregnes:</p>
-<pre class="r"><code>a&lt;-devians1/(50-3)
+<p>Determinationskoefficienten og den justerede determinationskoefficient for model 2 beregnes:</p>
+<pre class="r"><code>R2&lt;-round(devians0/devians2,3)
+a&lt;-devians1/(50-3)
 b&lt;-devians2/(50-1)
 c&lt;-a/b
 R2adj2&lt;-round(1-c,3)
-print(paste(&quot;Den justerede determinationskoefficient er da&quot;,R2adj2))</code></pre>
-<pre><code>## [1] &quot;Den justerede determinationskoefficient er da 0.653&quot;</code></pre>
+print(paste(&quot;Determinationskoefficienten og den justerede determinationskoefficient er da&quot;, R2,&quot;og&quot;, R2adj2))</code></pre>
+<pre><code>## [1] &quot;Determinationskoefficienten og den justerede determinationskoefficient er da 0.667 og 0.653&quot;</code></pre>
 
 
 
