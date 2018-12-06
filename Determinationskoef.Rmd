@@ -7,12 +7,12 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Determinationskoeficient eksempel med udgangspunkt i datasættet cars:
+Ud fra datasættet cars beregnes determinationskoefficienter og justerede determinationskoefficienter for model 1 og 2.
 ```{r}
 plot.default(cars,ylab ="y",xlab="x")
 ```
 
-Data:
+Data model 1:
 ```{r}
 y<-cars$dist
 x1<-cars$speed
@@ -48,7 +48,7 @@ devians2<-t(c(y-P1%*%y))%*%c(y-P1%*%y)
 Beregning af determinationskoefficient:
 ```{r}
 R2<-round(devians1/devians0,3)
-print(paste("Determinationskoefficent er da",R2))
+print(paste("Determinationskoefficient er da",R2))
 ```
 
 Beregning af den justerede determinationskoefficient: 
@@ -57,6 +57,6 @@ a<-devians2/(50-2)
 b<-devians0/(50-1)
 c<-a/b
 R2adj1<-round(1-c,3)
-print(paste("Den justerede determinationskoefficent er da",R2adj1))
+print(paste("Den justerede determinationskoefficient er da",R2adj1))
 
 ```

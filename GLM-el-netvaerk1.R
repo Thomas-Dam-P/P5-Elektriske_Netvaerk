@@ -109,7 +109,65 @@ konf#Konfidensintervaller for parametrene:
 konfg
 konfg-konf#forskel i konfidensintervallet fra før og det nye.
 
-
+#nyt forsøg med anden varians: 
+varians<-c(rep((0.03)^2,18),rep(1,19))
+varians
+Sigma=diag(varians)
+invsqrtSigma=solve(sqrt(Sigma))
+D=diag(rep(1,37))
+Dtilde=invsqrtSigma%*%D
+DTD=t(Dtilde)%*%Dtilde
+Nulm=matrix(rep(0,676),26,26)
+A=matrix(c(rbind(DTD,C),rbind(t(C),Nulm)),63,63)
+Ainv=solve(A)
+P=Dtilde%*%Ainv[1:37,1:37]%*%t(Dtilde)
+lev=c()
+for(i in 1:37)
+{
+  lev=c(lev,P[i,i])
+}
+v=rep(1,37)
+for(i in 1:37)
+{
+  if(min(lev)<0.9999999999)
+  {
+    remove=match(min(lev),lev)
+    Sigma=Sigma[-remove,-remove]
+    D=D[-remove,]
+    v=v[-remove]
+    invsqrtSigma=solve(sqrt(Sigma))
+    Dtilde=invsqrtSigma%*%D
+    DTD=t(Dtilde)%*%Dtilde
+    A=matrix(c(rbind(DTD,C),rbind(t(C),Nulm)),63,63)
+    Ainv=solve(A)
+    P=Dtilde%*%Ainv[1:37,1:37]%*%t(Dtilde)
+    lev=c()
+    for(j in 1:length(v))
+    {
+      lev=c(lev,P[j,j])
+    }
+    print(lev)
+  }
+}
+d=c(Beta[2:4],Beta[8],Beta[10],Beta[12],Beta[14],Beta[16:18],Beta[25])
+Sigma=diag((d*0.01)^2)
+invsqrtSigma=solve(sqrt(Sigma))
+dtilde=invsqrtSigma%*%d
+Dtilde=invsqrtSigma%*%D
+DTD=t(Dtilde)%*%Dtilde
+A=matrix(c(rbind(DTD,C),rbind(t(C),Nulm)),63,63)
+Ainv=solve(A)
+Beta=Ainv%*%c(t(Dtilde)%*%dtilde,rep(0,26))
+#Dette giver samme estimat som før.
+#Nu findes konfidens intervaller med den nye D og Sigma:
+konf=matrix(rep(0,74),37,2)
+for(i in 1:37)
+{
+  konf[i,1]=Beta[i]-1.959963984540*sqrt(Ainv[i,i])
+  konf[i,2]=Beta[i]+1.959963984540*sqrt(Ainv[i,i])
+}
+konfg-konf
+konfg
 #D efter vi har fjernet målinger med leverage metoden
 # c(Beta[2:3],Beta[6],Beta[8],Beta[10],Beta[12],Beta[14],Beta[16:19])
 # d=rnorm(11,mean=c(Beta[2:3],Beta[6],Beta[8],Beta[10],Beta[12],Beta[14],Beta[16:19]),sd=sqrt((c(Beta[2:3],Beta[6],Beta[8],Beta[10],Beta[12],Beta[14],Beta[16:19])*0.01)^2))
