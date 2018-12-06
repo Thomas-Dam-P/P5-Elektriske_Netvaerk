@@ -109,8 +109,8 @@ konf#Konfidensintervaller for parametrene:
 konfg
 konfg-konf#forskel i konfidensintervallet fra før og det nye.
 
-#nyt forsøg med anden varians: 
-varians<-c(rep((0.03)^2,18),rep(1,19))
+#leverage kun afhængigt af netværk, med anden varians: 
+varians<-c(rep(0.0155,18),rep(1,19))
 varians
 Sigma=diag(varians)
 invsqrtSigma=solve(sqrt(Sigma))
@@ -149,7 +149,8 @@ for(i in 1:37)
     print(lev)
   }
 }
-d=c(Beta[2:4],Beta[8],Beta[10],Beta[12],Beta[14],Beta[16:18],Beta[25])
+D
+d=c(Beta[2:3],Beta[6],Beta[8],Beta[10],Beta[12],Beta[14],Beta[16:18],Beta[36])
 Sigma=diag((d*0.01)^2)
 invsqrtSigma=solve(sqrt(Sigma))
 dtilde=invsqrtSigma%*%d
