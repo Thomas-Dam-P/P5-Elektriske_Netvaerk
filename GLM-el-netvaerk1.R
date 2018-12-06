@@ -87,6 +87,20 @@ for(i in 1:37)
     print(lev)
   }
 }
+#Determinationskoefficient for modellen:
+mu<-P%*%dtilde
+ 
+  V<-c()
+for (i in 1:11){
+  V<-c(V,(dtilde[i]-mu[i])^2)
+}
+sum(V)
+V2<-c()
+for (i in 1:11){
+  V2<-c(V2,(dtilde[i]-(sum(dtilde)/11))^2)
+}
+R2<-1-(sum(V)/sum(V2))
+R2
 #Her estimeres beta ud fra den nye D og Sigma:
   d=c(Beta[2:3],Beta[6],Beta[8],Beta[10:12],Beta[14],Beta[16],Beta[18],Beta[25])
   Sigma=diag((d*0.01)^2)
@@ -110,7 +124,7 @@ konfg
 konfg-konf#forskel i konfidensintervallet fra før og det nye.
 
 #leverage kun afhængigt af netværk, med anden varians: 
-varians<-c(rep(0.0155,18),rep(1,19))
+varians<-c(rep((0.01*0.0155)^2,18),rep((0.01*1)^2,19))
 varians
 Sigma=diag(varians)
 invsqrtSigma=solve(sqrt(Sigma))
@@ -150,7 +164,7 @@ for(i in 1:37)
   }
 }
 D
-d=c(Beta[2:3],Beta[6],Beta[8],Beta[10],Beta[12],Beta[14],Beta[16:18],Beta[36])
+d=c(Beta[2:3],Beta[5],Beta[8],Beta[10],Beta[12],Beta[14],Beta[16:18],Beta[36])
 Sigma=diag((d*0.01)^2)
 invsqrtSigma=solve(sqrt(Sigma))
 dtilde=invsqrtSigma%*%d
