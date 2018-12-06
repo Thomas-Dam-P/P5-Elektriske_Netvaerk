@@ -137,3 +137,110 @@ for(i in 19:37)
 z
 pnorm(z)
 ```
+
+```{#numCode .R .numberLines}
+simdata=rnorm(37,mean=Beta[1:37],sd=abs(Beta[1:37])*0.01)
+Sigma=diag((Beta[1:37]*0.01)^2)#diag(37)
+X=diag(rep(1,37))
+invsqrtSigma=solve(sqrt(Sigma))
+ytilde=invsqrtSigma%*%simdata
+Xtilde=invsqrtSigma%*%X
+XTX=t(Xtilde)%*%Xtilde
+Nulm=matrix(rep(0,676),26,26)
+A=matrix(c(rbind(XTX,R),rbind(t(R),Nulm)),63,63)
+Ainv=solve(A)
+Beta=Ainv%*%c(t(Xtilde)%*%ytilde,rep(0,26))
+P=Xtilde%*%Ainv[1:37,1:37]%*%t(Xtilde)
+plot((ytilde-P%*%ytilde)[19:37])
+plot((sqrt(Sigma)%*%(P%*%ytilde))[1:18],(ytilde-P%*%ytilde)[1:18])
+```
+
+```{r, echo=FALSE}
+simdata=rnorm(37,mean=Beta[1:37],sd=abs(Beta[1:37])*0.01)
+Sigma=diag((Beta[1:37]*0.01)^2)#diag(37)
+X=diag(rep(1,37))
+invsqrtSigma=solve(sqrt(Sigma))
+ytilde=invsqrtSigma%*%simdata
+Xtilde=invsqrtSigma%*%X
+XTX=t(Xtilde)%*%Xtilde
+Nulm=matrix(rep(0,676),26,26)
+A=matrix(c(rbind(XTX,R),rbind(t(R),Nulm)),63,63)
+Ainv=solve(A)
+Beta=Ainv%*%c(t(Xtilde)%*%ytilde,rep(0,26))
+P=Xtilde%*%Ainv[1:37,1:37]%*%t(Xtilde)
+plot((ytilde-P%*%ytilde)[1:18], main= "Strømstyrker",ylab = "Residualer")
+plot((ytilde-P%*%ytilde)[19:37], main= "Spændinger",ylab = "Residualer")
+plot((sqrt(Sigma)%*%(P%*%ytilde))[1:18],(ytilde-P%*%ytilde)[1:18], main= "Strømstyrker",ylab = "Residualer", xlab = "Fittede værdier")
+plot((sqrt(Sigma)%*%(P%*%ytilde))[19:37],(ytilde-P%*%ytilde)[19:37],main= "Spændinger",ylab = "Residualer", xlab = "Fittede værdier")
+```
+
+```{#numCode .R .numberLines}
+lev=c()
+for(i in 1:37)
+{
+  lev=c(lev,P[i,i])
+}
+y=simdata
+for(i in 1:37)
+{
+  if(min(lev)<0.9999999999)
+  {
+    remove=match(min(lev),lev)
+    Sigma=Sigma[-remove,-remove]
+    X=X[-remove,]
+    y=y[-remove]
+    invsqrtSigma=solve(sqrt(Sigma))
+    Xtilde=invsqrtSigma%*%X
+    XTX=t(Xtilde)%*%Xtilde
+    A=matrix(c(rbind(XTX,R),rbind(t(R),Nulm)),63,63)
+    Ainv=solve(A)
+    P=Xtilde%*%Ainv[1:37,1:37]%*%t(Xtilde)
+    lev=c()
+    for(j in 1:length(y))
+    {
+      lev=c(lev,P[j,j])
+    }
+  }
+}
+X
+```
+
+```{r, echo=FALSE}
+lev=c()
+for(i in 1:37)
+{
+  lev=c(lev,P[i,i])
+}
+y=simdata
+for(i in 1:37)
+{
+  if(min(lev)<0.9999999999)
+  {
+    remove=match(min(lev),lev)
+    Sigma=Sigma[-remove,-remove]
+    X=X[-remove,]
+    y=y[-remove]
+    invsqrtSigma=solve(sqrt(Sigma))
+    Xtilde=invsqrtSigma%*%X
+    XTX=t(Xtilde)%*%Xtilde
+    A=matrix(c(rbind(XTX,R),rbind(t(R),Nulm)),63,63)
+    Ainv=solve(A)
+    P=Xtilde%*%Ainv[1:37,1:37]%*%t(Xtilde)
+    lev=c()
+    for(j in 1:length(y))
+    {
+      lev=c(lev,P[j,j])
+    }
+  }
+}
+X
+```
+
+
+
+
+
+
+
+
+

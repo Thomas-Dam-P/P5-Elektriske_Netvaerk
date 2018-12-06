@@ -1,6 +1,8 @@
 ---
 title: "Determinationskoef-adj"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -27,7 +29,6 @@ designmatrix og transponeret designmatrix:
 X<-matrix(c(k,x1,x2),50,3) 
 tX<-t(X)
 print(X)
-print(tX)
 ```
 
 Hatmatrix og hatmatrice for null modellen:
@@ -43,11 +44,12 @@ devians1<-t(c(y-P1%*%y))%*%c(y-P1%*%y)
 devians2<-t(c(y-P0%*%y))%*%c(y-P0%*%y) 
 ```
 
-den justerede determinationskoefficient for model 1 og model 2 beregnes:
+Determinationskoefficienten og den justerede determinationskoefficient for model 2 beregnes:
 ```{r}
+R2<-round(devians0/devians2,3)
 a<-devians1/(50-3)
 b<-devians2/(50-1)
 c<-a/b
 R2adj2<-round(1-c,3)
-print(paste("Den justerede determinationskoefficient er da",R2adj2))
+print(paste("Determinationskoefficienten og den justerede determinationskoefficient er da", R2,"og", R2adj2))
 ```

@@ -20,7 +20,6 @@ data<-matrix(c(y,x1),50,2)
 colnames(data)<-c("y-værdier","x-værdier")
 print(data)
 ```
-
 Første søjle i designmatrix:
 ```{r}
 k<-c(rep.int(1,50))
@@ -31,10 +30,9 @@ Designmatrix og transponeret designmatrix:
 X<-matrix(c(k,x1),50,2)
 tX<-t(X)
 print(X)
-print(tX)
 ```
 
-Hatmatrix og hatmatrice for null modellen:
+Hatmatrix og hatmatrix for nullmodellen:
 ```{r}
 P1<-X%*%solve(tX%*%X)%*%tX
 P0<-k%*%solve(t(k)%*%k)%*%t(k)
@@ -60,4 +58,5 @@ b<-devians0/(50-1)
 c<-a/b
 R2adj1<-round(1-c,3)
 print(paste("Den justerede determinationskoefficent er da",R2adj1))
+
 ```
