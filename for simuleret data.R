@@ -62,6 +62,59 @@ for (i in 1:length(ytilde)){
 }
 R2<-1-(sum(V)/sum(V2))
 R2
-#justeret determinationskoefficient
-#R2adj<-1-((length(ytilde)-1)/(length(ytilde)-37))*(1-R2)
-#R2adj
+#Vi fjerner 5 målinger ved leverage metoden
+varians<-c(rep((0.01*0.0155)^2,18),rep((0.01*1)^2,19))
+varians
+Sigma1=diag(varians)
+invsqrtSigma1=solve(sqrt(Sigma1))
+Xtilde=invsqrtSigma1%*%X
+XTX=t(Xtilde)%*%Xtilde
+Nulm=matrix(rep(0,676),26,26)
+A=matrix(c(rbind(XTX,R),rbind(t(R),Nulm)),63,63)
+Ainv=solve(A)
+P=Xtilde%*%Ainv[1:37,1:37]%*%t(Xtilde)
+lev=c()
+for(i in 1:37)
+{
+  lev=c(lev,P[i,i])
+}
+v=rep(1,37)
+for(i in 1:5)
+{
+  if(min(lev)<0.9999999999)
+  {
+    remove=match(min(lev),lev)
+    Sigma=Sigma[-remove,-remove]
+    Sigma1=Sigma1[-remove,-remove]
+    y=y[-remove]
+    X=X[-remove,]
+    v=v[-remove]
+    invsqrtSigma1=solve(sqrt(Sigma1))
+    Xtilde=invsqrtSigma1%*%X
+    XTX=t(Xtilde)%*%Xtilde
+    A=matrix(c(rbind(XTX,R),rbind(t(R),Nulm)),63,63)
+    Ainv=solve(A)
+    P=Xtilde%*%Ainv[1:37,1:37]%*%t(Xtilde)
+    lev=c()
+    for(j in 1:length(v))
+    {
+      lev=c(lev,P[j,j])
+    }
+    print(lev)
+  }
+}
+invsqrtSigma=solve(sqrt(Sigma))
+ytilde=invsqrtSigma%*%y
+Xtilde=invsqrtSigma%*%X
+XTX=t(Xtilde)%*%Xtilde
+A=matrix(c(rbind(XTX,R),rbind(t(R),Nulm)),63,63)
+Ainv=solve(A)
+Beta3=Ainv%*%c(t(Xtilde)%*%ytilde,rep(0,26))
+Beta[1:37]
+konf=matrix(rep(0,74),37,2)
+for(i in 1:37)
+{
+  konf[i,1]=Beta3[i]-1.959963984540*sqrt(Ainv[i,i])
+  konf[i,2]=Beta3[i]+1.959963984540*sqrt(Ainv[i,i])
+}
+konf
