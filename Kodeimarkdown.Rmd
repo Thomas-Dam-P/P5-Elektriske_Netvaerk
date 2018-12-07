@@ -106,13 +106,13 @@ konf
 ```
 
 ```{r, echo=FALSE}
-konf=matrix(rep(0,74),37,2)
+konfg=matrix(rep(0,74),37,2)
 for(i in 1:37)
 {
-  konf[i,1]=Beta[i]-1.959963984540*sqrt(Ainv[i,i])
-  konf[i,2]=Beta[i]+1.959963984540*sqrt(Ainv[i,i])
+  konfg[i,1]=Beta[i]-1.959963984540*sqrt(Ainv[i,i])
+  konfg[i,2]=Beta[i]+1.959963984540*sqrt(Ainv[i,i])
 }
-konf
+konfg
 ```
 
 
@@ -151,27 +151,14 @@ A=matrix(c(rbind(XTX,R),rbind(t(R),Nulm)),63,63)
 Ainv=solve(A)
 Beta=Ainv%*%c(t(Xtilde)%*%ytilde,rep(0,26))
 P=Xtilde%*%Ainv[1:37,1:37]%*%t(Xtilde)
-plot((ytilde-P%*%ytilde)[19:37])
-plot((sqrt(Sigma)%*%(P%*%ytilde))[1:18],(ytilde-P%*%ytilde)[1:18])
-```
-
-```{r, echo=FALSE}
-simdata=rnorm(37,mean=Beta[1:37],sd=abs(Beta[1:37])*0.01)
-Sigma=diag((Beta[1:37]*0.01)^2)#diag(37)
-X=diag(rep(1,37))
-invsqrtSigma=solve(sqrt(Sigma))
-ytilde=invsqrtSigma%*%simdata
-Xtilde=invsqrtSigma%*%X
-XTX=t(Xtilde)%*%Xtilde
-Nulm=matrix(rep(0,676),26,26)
-A=matrix(c(rbind(XTX,R),rbind(t(R),Nulm)),63,63)
-Ainv=solve(A)
-Beta=Ainv%*%c(t(Xtilde)%*%ytilde,rep(0,26))
-P=Xtilde%*%Ainv[1:37,1:37]%*%t(Xtilde)
 plot((ytilde-P%*%ytilde)[1:18], main= "Strømstyrker",ylab = "Residualer")
 plot((ytilde-P%*%ytilde)[19:37], main= "Spændinger",ylab = "Residualer")
 plot((sqrt(Sigma)%*%(P%*%ytilde))[1:18],(ytilde-P%*%ytilde)[1:18], main= "Strømstyrker",ylab = "Residualer", xlab = "Fittede værdier")
 plot((sqrt(Sigma)%*%(P%*%ytilde))[19:37],(ytilde-P%*%ytilde)[19:37],main= "Spændinger",ylab = "Residualer", xlab = "Fittede værdier")
+```
+
+```{r, echo=FALSE}
+
 ```
 
 ```{#numCode .R .numberLines}
@@ -180,7 +167,7 @@ for(i in 1:37)
 {
   lev=c(lev,P[i,i])
 }
-y=simdata
+v=rep(1,37)
 for(i in 1:37)
 {
   if(min(lev)<0.9999999999)
@@ -188,7 +175,7 @@ for(i in 1:37)
     remove=match(min(lev),lev)
     Sigma=Sigma[-remove,-remove]
     X=X[-remove,]
-    y=y[-remove]
+    v=v[-remove]
     invsqrtSigma=solve(sqrt(Sigma))
     Xtilde=invsqrtSigma%*%X
     XTX=t(Xtilde)%*%Xtilde
@@ -196,7 +183,7 @@ for(i in 1:37)
     Ainv=solve(A)
     P=Xtilde%*%Ainv[1:37,1:37]%*%t(Xtilde)
     lev=c()
-    for(j in 1:length(y))
+    for(j in 1:length(v))
     {
       lev=c(lev,P[j,j])
     }
@@ -206,12 +193,21 @@ X
 ```
 
 ```{r, echo=FALSE}
+Sigma=diag((Beta[1:37]*0.01)^2)#diag(37)
+X=diag(rep(1,37))
+invsqrtSigma=solve(sqrt(Sigma))
+Xtilde=invsqrtSigma%*%X
+XTX=t(Xtilde)%*%Xtilde
+Nulm=matrix(rep(0,676),26,26)
+A=matrix(c(rbind(XTX,R),rbind(t(R),Nulm)),63,63)
+Ainv=solve(A)
+P=Xtilde%*%Ainv[1:37,1:37]%*%t(Xtilde)
 lev=c()
 for(i in 1:37)
 {
   lev=c(lev,P[i,i])
 }
-y=simdata
+v=rep(1,37)
 for(i in 1:37)
 {
   if(min(lev)<0.9999999999)
@@ -219,7 +215,7 @@ for(i in 1:37)
     remove=match(min(lev),lev)
     Sigma=Sigma[-remove,-remove]
     X=X[-remove,]
-    y=y[-remove]
+    v=v[-remove]
     invsqrtSigma=solve(sqrt(Sigma))
     Xtilde=invsqrtSigma%*%X
     XTX=t(Xtilde)%*%Xtilde
@@ -227,7 +223,7 @@ for(i in 1:37)
     Ainv=solve(A)
     P=Xtilde%*%Ainv[1:37,1:37]%*%t(Xtilde)
     lev=c()
-    for(j in 1:length(y))
+    for(j in 1:length(v))
     {
       lev=c(lev,P[j,j])
     }
@@ -237,10 +233,114 @@ X
 ```
 
 
+```{#numCode .R .numberLines}
+y=c(Beta[2:3],Beta[6],Beta[8],Beta[10:12],Beta[14],Beta[16],Beta[18],Beta[25])
+  Sigma=diag((y*0.01)^2)
+  invsqrtSigma=solve(sqrt(Sigma))
+  ytilde=invsqrtSigma%*%y
+  Xtilde=invsqrtSigma%*%X
+  XTX=t(Xtilde)%*%Xtilde
+  A=matrix(c(rbind(XTX,R),rbind(t(R),Nulm)),63,63)
+  Ainv=solve(A)
+  Beta=Ainv%*%c(t(Xtilde)%*%ytilde,rep(0,26))
+konf=matrix(rep(0,74),37,2)
+for(i in 1:37)
+{
+  konf[i,1]=Beta[i]-1.959963984540*sqrt(Ainv[i,i])
+  konf[i,2]=Beta[i]+1.959963984540*sqrt(Ainv[i,i])
+}
+konf
+konfg-konf
+```
 
+```{r, echo=FALSE}
+y=c(Beta[2:3],Beta[6],Beta[8],Beta[10:12],Beta[14],Beta[16],Beta[18],Beta[25])
+  Sigma=diag((y*0.01)^2)
+  invsqrtSigma=solve(sqrt(Sigma))
+  ytilde=invsqrtSigma%*%y
+  Xtilde=invsqrtSigma%*%X
+  XTX=t(Xtilde)%*%Xtilde
+  A=matrix(c(rbind(XTX,R),rbind(t(R),Nulm)),63,63)
+  Ainv=solve(A)
+  Beta=Ainv%*%c(t(Xtilde)%*%ytilde,rep(0,26))
+konf=matrix(rep(0,74),37,2)
+for(i in 1:37)
+{
+  konf[i,1]=Beta[i]-1.959963984540*sqrt(Ainv[i,i])
+  konf[i,2]=Beta[i]+1.959963984540*sqrt(Ainv[i,i])
+}
+konf
+konfg-konf
+```
 
+```{#numCode .R .numberLines}
+konfg-konf
+```
 
+```{r, echo=FALSE}
+varians<-c(rep(0.0155,18),rep(1,19))
+Sigma=diag(varians)
+invsqrtSigma=solve(sqrt(Sigma))
+D=diag(rep(1,37))
+Dtilde=invsqrtSigma%*%D
+DTD=t(Dtilde)%*%Dtilde
+Nulm=matrix(rep(0,676),26,26)
+A=matrix(c(rbind(DTD,R),rbind(t(R),Nulm)),63,63)
+Ainv=solve(A)
+P=Dtilde%*%Ainv[1:37,1:37]%*%t(Dtilde)
+lev=c()
+for(i in 1:37)
+{
+  lev=c(lev,P[i,i])
+}
+v=rep(1,37)
+for(i in 1:37)
+{
+  if(min(lev)<0.9999999999)
+  {
+    remove=match(min(lev),lev)
+    Sigma=Sigma[-remove,-remove]
+    D=D[-remove,]
+    v=v[-remove]
+    invsqrtSigma=solve(sqrt(Sigma))
+    Dtilde=invsqrtSigma%*%D
+    DTD=t(Dtilde)%*%Dtilde
+    A=matrix(c(rbind(DTD,R),rbind(t(R),Nulm)),63,63)
+    Ainv=solve(A)
+    P=Dtilde%*%Ainv[1:37,1:37]%*%t(Dtilde)
+    lev=c()
+    for(j in 1:length(v))
+    {
+      lev=c(lev,P[j,j])
+    }
+  }
+}
+d=c(Beta[2:3],Beta[6],Beta[8],Beta[10],Beta[12],Beta[14],Beta[16:18],Beta[36])
+Sigma=diag((d*0.01)^2)
+invsqrtSigma=solve(sqrt(Sigma))
+dtilde=invsqrtSigma%*%d
+Dtilde=invsqrtSigma%*%D
+DTD=t(Dtilde)%*%Dtilde
+A=matrix(c(rbind(DTD,R),rbind(t(R),Nulm)),63,63)
+Ainv=solve(A)
+Beta=Ainv%*%c(t(Dtilde)%*%dtilde,rep(0,26))
+#Dette giver samme estimat som før.
+#Nu findes konfidens intervaller med den nye D og Sigma:
+konf=matrix(rep(0,74),37,2)
+for(i in 1:37)
+{
+  konf[i,1]=Beta[i]-1.959963984540*sqrt(Ainv[i,i])
+  konf[i,2]=Beta[i]+1.959963984540*sqrt(Ainv[i,i])
+}
+konfg-konf
+```
 
+```{#numCode .R .numberLines}
 
+```
+
+```{r, echo=FALSE}
+
+```
 
 
