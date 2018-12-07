@@ -1,35 +1,3 @@
-library("pracma")
-Sigma=read.table("Sigmany.txt")
-Sigma=as.matrix(Sigma)
-R=read.table("Cny.txt")
-R=as.matrix(R)
-X=read.table("D.txt")
-X=as.matrix(X)
-effekt=read.table("effekt.txt")
-effekt=as.matrix(effekt)
-y=c(effekt/400,400)
-invsqrtSigma=solve(sqrt(Sigma))
-ytilde=invsqrtSigma%*%y
-Xtilde=invsqrtSigma%*%X
-XTX=t(Xtilde)%*%Xtilde
-Nulm=matrix(rep(0,676),26,26)
-A=matrix(c(rbind(XTX,R),rbind(t(R),Nulm)),63,63)
-Ainv=solve(A)
-Beta=Ainv%*%c(t(Xtilde)%*%ytilde,rep(0,26))
-Beta[1:37]#Her er det første estimat for strømstyrker og spændinger i hele netværket:
-for(i in 1:50)
-{
-  y=c(effekt/c(Beta[21:22],Beta[25],Beta[27],Beta[29],Beta[31],Beta[33],Beta[35:37]),400)
-  Sigma=diag((y*0.01)^2)
-  invsqrtSigma=solve(sqrt(Sigma))
-  ytilde=invsqrtSigma%*%y
-  Xtilde=invsqrtSigma%*%X
-  XTX=t(Xtilde)%*%Xtilde
-  A=matrix(c(rbind(XTX,R),rbind(t(R),Nulm)),63,63)
-  Ainv=solve(A)
-  Beta=Ainv%*%c(t(Xtilde)%*%ytilde,rep(0,26))
-}
-y=rnorm(37,mean=Beta[1:37],sd=abs(Beta[1:37])*0.01)
 Sigma=diag((y*0.01)^2)
 X=diag(1,37)
 invsqrtSigma=solve(sqrt(Sigma))
@@ -38,14 +6,12 @@ Xtilde=invsqrtSigma%*%X
 XTX=t(Xtilde)%*%Xtilde
 A=matrix(c(rbind(XTX,R),rbind(t(R),Nulm)),63,63)
 Ainv=solve(A)
-Beta2=Ainv%*%c(t(Xtilde)%*%ytilde,rep(0,26))
-y
-Beta[1:37]
+Beta3=Ainv%*%c(t(Xtilde)%*%ytilde,rep(0,26))
 konf=matrix(rep(0,74),37,2)
 for(i in 1:37)
 {
-  konf[i,1]=Beta2[i]-1.959963984540*sqrt(Ainv[i,i])
-  konf[i,2]=Beta2[i]+1.959963984540*sqrt(Ainv[i,i])
+  konf[i,1]=Beta3[i]-1.959963984540*sqrt(Ainv[i,i])
+  konf[i,2]=Beta3[i]+1.959963984540*sqrt(Ainv[i,i])
 }
 konf#Konfidensintervaller for spændingerne:
 #determinationskoefficient udregnes:
@@ -79,15 +45,15 @@ for(i in 1:37)
   lev=c(lev,P[i,i])
 }
 v=rep(1,37)
-y5=y
-for(i in 1:5)
+y10=y
+for(i in 1:10)
 {
   if(min(lev)<0.9999999999)
   {
     remove=match(min(lev),lev)
     Sigma=Sigma[-remove,-remove]
     Sigma1=Sigma1[-remove,-remove]
-    y5=y5[-remove]
+    y10=y10[-remove]
     X=X[-remove,]
     v=v[-remove]
     invsqrtSigma1=solve(sqrt(Sigma1))
@@ -101,26 +67,27 @@ for(i in 1:5)
     {
       lev=c(lev,P[j,j])
     }
+    print(lev)
   }
 }
 invsqrtSigma=solve(sqrt(Sigma))
-ytilde=invsqrtSigma%*%y5
+ytilde=invsqrtSigma%*%y10
 Xtilde=invsqrtSigma%*%X
 XTX=t(Xtilde)%*%Xtilde
 A=matrix(c(rbind(XTX,R),rbind(t(R),Nulm)),63,63)
 Ainv=solve(A)
-Beta5=Ainv%*%c(t(Xtilde)%*%ytilde,rep(0,26))
-Beta[1:37]#Estimat med 5 fjernede målinger.
-konf5=matrix(rep(0,74),37,2)
+Beta10=Ainv%*%c(t(Xtilde)%*%ytilde,rep(0,26))
+Beta10[1:37]#Estimat med 5 fjernede målinger.
+konf10=matrix(rep(0,74),37,2)
 #konfidensinterval med 5 fjernede målinger:
 for(i in 1:37)
 {
-  konf5[i,1]=Beta5[i]-1.959963984540*sqrt(Ainv[i,i])
-  konf5[i,2]=Beta5[i]+1.959963984540*sqrt(Ainv[i,i])
+  konf10[i,1]=Beta10[i]-1.959963984540*sqrt(Ainv[i,i])
+  konf10[i,2]=Beta10[i]+1.959963984540*sqrt(Ainv[i,i])
 }
-konf5
+konf10
 konf
-konf-konf5
+konf-konf10
 #Vi finder R^2 med 5 fjernede målinger:
 P=Xtilde%*%Ainv[1:37,1:37]%*%t(Xtilde)
 mu=P%*%ytilde
@@ -132,5 +99,5 @@ V2=c()
 for (i in 1:length(ytilde)){
   V2=c(V2,(ytilde[i]-(sum(ytilde)/length(ytilde)))^2)
 }
-R25=1-(sum(V)/sum(V2))
-R25adj=1-(((37-1)/(37-length(ytilde))))*(1-R25)
+R210=1-(sum(V)/sum(V2))
+R210adj=1-(((37-1)/(37-length(ytilde))))*(1-R210)
