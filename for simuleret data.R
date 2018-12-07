@@ -62,6 +62,10 @@ for (i in 1:length(ytilde)){
 }
 R2<-1-(sum(V)/sum(V2))
 R2
+#Vi plotter residualer:
+res0=ytilde-P%*%ytilde
+plot((ytilde-P%*%ytilde)[1:18])#strømstyrker
+plot((ytilde-P%*%ytilde)[19:37])#spændinger
 #Vi fjerner 5 målinger ved leverage metoden
 varians=c(rep((0.01*0.0155)^2,18),rep((0.01*1)^2,19))
 varians
@@ -134,3 +138,18 @@ for (i in 1:length(ytilde)){
 }
 R25=1-(sum(V)/sum(V2))
 R25adj=1-(((37-1)/(37-length(ytilde))))*(1-R25)
+#Vi plotter residualer med fem fjernede:
+plot((ytilde-P%*%ytilde)[1:18])#strømstyrker
+plot((ytilde-P%*%ytilde)[19:37])#spændinger
+res5=ytilde-P%*%ytilde
+
+#Indfører målefejl, og tester om den kan detekteres med standardiserede residualer:
+y5[2]=1
+ytildemf=invsqrtSigma%*%y5
+P=Xtilde%*%Ainv[1:37,1:37]%*%t(Xtilde)
+v=c()
+for(i in 1:length(y5))
+{
+  v=c(v,(ytildemf[i]-(P%*%ytildemf)[i])/sqrt(1-P[i,i]))
+}
+v
