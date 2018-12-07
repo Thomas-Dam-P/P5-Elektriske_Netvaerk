@@ -101,3 +101,13 @@ for (i in 1:length(ytilde)){
 }
 R210=1-(sum(V)/sum(V2))
 R210adj=1-(((37-1)/(37-length(ytilde))))*(1-R210)
+#Indfører målefejl, og tester om den kan detekteres med standardiserede residualer:
+y10[2]=1
+ytildemf=invsqrtSigma%*%y10
+P=Xtilde%*%Ainv[1:37,1:37]%*%t(Xtilde)
+v=c()
+for(i in 1:length(y10))
+{
+  v=c(v,(ytildemf[i]-(P%*%ytildemf)[i])/sqrt(1-P[i,i]))
+}
+v
