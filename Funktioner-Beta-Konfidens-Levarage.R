@@ -1,6 +1,3 @@
-C=read.table("Cny.txt")
-C=as.matrix(C)
-Nulm=matrix(rep(0,676),26,26)
 #Function til at estimerer beta:
 betaestimat<-function(d,D,Sigma)
 {invsqrtSigma=solve(sqrt(Sigma))
@@ -25,11 +22,16 @@ for(i in 1:50)
   Beta=Ainv%*%c(t(Dtilde)%*%dtilde,rep(0,26))
 }
 Beta[1:37]}
-y=c((effekt)/c(Beta[21:22],Beta[25],Beta[27],Beta[29],Beta[31],Beta[33],Beta[35:37]),400)
+C=read.table("Cny.txt")
+C=as.matrix(C)
+Nulm=matrix(rep(0,676),26,26)
+effekt=read.table("effekt.txt")
+effekt=as.matrix(effekt)
+d=c((effekt)/c(Beta[21:22],Beta[25],Beta[27],Beta[29],Beta[31],Beta[33],Beta[35:37]),400)
 D=read.table("D.txt")
 D=as.matrix(D)
 Sigma=diag((d*0.01)^2)
-betaestimat(y,D,Sigma)
+betaestimat(d,D,Sigma)
 #Funktion til bestemmelse af konfidensintervaller: 
 konfidens<-function(Beta){
   konfg=matrix(rep(0,74),37,2)
@@ -78,5 +80,4 @@ levarage<-function(D,Sigma){
       print(lev)
     }
   }}  
-}
-
+#fejl i levarage funktion. 
