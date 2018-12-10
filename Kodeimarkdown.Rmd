@@ -124,7 +124,7 @@ for(i in 19:37)
   z=c(z,(Beta[i]-T)/sqrt(Ainv[i,i]))
 }
 z
-pnorm(z)
+1-pnorm(z)
 ```
 
 ```{r, echo=FALSE}
@@ -135,8 +135,34 @@ for(i in 19:37)
   z=c(z,(Beta[i]-T)/sqrt(Ainv[i,i])) #Wald's test
 }
 z
+1-pnorm(z)
+```
+
+
+```{#numCode .R .numberLines}
+z=c()
+T=440
+for(i in 19:37)
+{
+  z=c(z,(Beta[i]-T)/sqrt(Ainv[i,i]))
+}
+z
 pnorm(z)
 ```
+
+```{r, echo=FALSE}
+z=c()
+T=440
+for(i in 19:37)
+{
+  z=c(z,(Beta[i]-T)/sqrt(Ainv[i,i])) #Wald's test
+}
+z
+pnorm(z)
+```
+
+
+
 
 ```{#numCode .R .numberLines}
 simdata=rnorm(37,mean=Beta[1:37],sd=abs(Beta[1:37])*0.01)

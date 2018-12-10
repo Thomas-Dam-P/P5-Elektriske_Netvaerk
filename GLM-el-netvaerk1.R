@@ -41,14 +41,27 @@ for(i in 1:37)
   konfg[i,2]=Beta[i]+1.959963984540*sqrt(Ainv[i,i])
 }
 konfg#Konfidensintervaller for parametrene:
+
+
 z=c()#H_0i: spændingen i knude i er mindre end T volt:
-T=390
+T=360
 for(i in 19:37)
 {
   z=c(z,(Beta[i]-T)/sqrt(Ainv[i,i])) #Wald's test
 }
 z
-1-pnorm(z)# p-værdier udregnes. hvis p-værdien er under 0.05, så kan vi med 95% sikkerhed sige, at den knude ikke har spænding lavere end T (forkaste H_0i).
+1-pnorm(z)
+
+#T-test for 440 W: 
+z=c()
+T=440
+for(i in 19:37)
+{
+  z=c(z,(Beta[i]-T)/sqrt(Ainv[i,i])) #Wald's test
+}
+z
+pnorm(z)
+# p-værdier udregnes. hvis p-værdien er under 0.05, så kan vi med 95% sikkerhed sige, at den knude ikke har spænding lavere end T (forkaste H_0i).
 #Nedenfor piller vi målinger med mindst leverage fra, indtil man ikke kan undvære flere
 Sigma=diag((Beta[1:37]*0.01)^2)#diag(37)
 D=diag(rep(1,37))
