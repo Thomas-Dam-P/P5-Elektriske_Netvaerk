@@ -41,6 +41,8 @@ for(i in 1:37)
   konfg[i,2]=Beta[i]+1.959963984540*sqrt(Ainv[i,i])
 }
 konfg#Konfidensintervaller for parametrene:
+
+
 z=c()#H_0i: spændingen i knude i er mindre end T volt:
 T=360
 for(i in 19:37)
@@ -49,7 +51,9 @@ for(i in 19:37)
 }
 z
 1-pnorm(z)
+
 #T-test for 440 W: 
+z=c()
 T=440
 for(i in 19:37)
 {
