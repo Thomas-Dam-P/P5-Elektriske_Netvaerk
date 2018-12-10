@@ -61,6 +61,7 @@ for(j in 1:37)
     Sigmat=Sigma[-remove,-remove]
     Xt=X[-remove,]
     vt=v[-remove]
+    yt=y[-remove]
     invsqrtSigmat=solve(sqrt(Sigmat))
     Xtildet=invsqrtSigmat%*%Xt
     XTXt=t(Xtildet)%*%Xtildet
@@ -70,37 +71,31 @@ for(j in 1:37)
     lev=c()
     for(k in 1:length(vt))
     {
-     lev=c(lev,P[j,j])
+     lev=c(lev,P[k,k])
     }
-    if(max(lev)<0.9999999999)
+    if(max(lev)<0.9999)
     {
       flag=1
       X=Xt
       Sigma=Sigmat
       v=vt
+      y=yt
     }
   }
 }
+}#Ovenfor har vi fjernet såmange målinger som muligt, uden at nogen af leveragene bliver 1.
+#Indfører målefejl, og tester om den kan detekteres med standardiserede residualer:
+y[15]=450
+invsqrtSigma=solve(sqrt(Sigma))
+ytilde=invsqrtSigma%*%y
+Xtilde=invsqrtSigma%*%X
+XTX=t(Xtilde)%*%Xtilde
+A=matrix(c(rbind(XTX,R),rbind(t(R),Nulm)),63,63)
+Ainv=solve(A)
+P=Xtilde%*%Ainv[1:37,1:37]%*%t(Xtilde)
+v=c()
+for(i in 1:length(y))
+{
+  v=c(v,(ytilde[i]-(P%*%ytilde)[i])/sqrt(1-P[i,i]))
 }
-
-# {
-#   if(min(lev)<0.9999999999)
-#   {
-#     remove=match(min(lev),lev)
-#     Sigma=Sigma[-remove,-remove]
-#     X=X[-remove,]
-#     v=v[-remove]
-#     invsqrtSigma=solve(sqrt(Sigma))
-#     Xtilde=invsqrtSigma%*%X
-#     XTX=t(Xtilde)%*%Xtilde
-#     A=matrix(c(rbind(XTX,R),rbind(t(R),Nulm)),63,63)
-#     Ainv=solve(A)
-#     P=Xtilde%*%Ainv[1:37,1:37]%*%t(Xtilde)
-#     lev=c()
-#     for(j in 1:length(v))
-#     {
-#       lev=c(lev,P[j,j])
-#     }
-#     print(lev)
-#   }
-# }
+v
