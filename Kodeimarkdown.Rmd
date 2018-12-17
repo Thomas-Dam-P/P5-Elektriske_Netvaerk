@@ -40,7 +40,7 @@ Beta[1:37]
 ```
 
 ```{r, echo=FALSE}
-library("pracma")
+#library("pracma")
 R=read.table("Cny.txt")
 R=as.matrix(R)
 X=read.table("D.txt")
@@ -164,7 +164,7 @@ pnorm(z)
 
 
 
-```{#numCode .R .numberLines}
+```{r, echo=FALSE}
 simdata=rnorm(37,mean=Beta[1:37],sd=abs(Beta[1:37])*0.01)
 Sigma=diag((Beta[1:37]*0.01)^2)#diag(37)
 X=diag(rep(1,37))
@@ -181,11 +181,11 @@ plot((ytilde-P%*%ytilde)[1:18], main= "Strømstyrker",ylab = "Residualer")
 plot((ytilde-P%*%ytilde)[19:37], main= "Spændinger",ylab = "Residualer")
 plot((sqrt(Sigma)%*%(P%*%ytilde))[1:18],(ytilde-P%*%ytilde)[1:18], main= "Strømstyrker",ylab = "Residualer", xlab = "Fittede værdier")
 plot((sqrt(Sigma)%*%(P%*%ytilde))[19:37],(ytilde-P%*%ytilde)[19:37],main= "Spændinger",ylab = "Residualer", xlab = "Fittede værdier")
+r<-ytilde-P%*%ytilde
+qqnorm(r,main="QQ plot normalfordeling",xlab="Teoretiske kvartiler",ylab="Residualer")
+hist(r)
 ```
 
-```{r, echo=FALSE}
-
-```
 
 ```{#numCode .R .numberLines}
 lev=c()
