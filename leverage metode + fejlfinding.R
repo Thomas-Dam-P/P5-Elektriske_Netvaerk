@@ -99,3 +99,20 @@ for(i in 1:length(y))
   v=c(v,(ytilde[i]-(P%*%ytilde)[i])/sqrt(1-P[i,i]))
 }
 v
+#Vi fjerner den 15. måling, da det standardiserede residual er meget højt for denne måling. Så finder vi de standardiserede residualer igen:
+y=y[-15]
+X=X[-15,]
+Sigma=Sigma[-15,-15]
+invsqrtSigma=solve(sqrt(Sigma))
+ytilde=invsqrtSigma%*%y
+Xtilde=invsqrtSigma%*%X
+XTX=t(Xtilde)%*%Xtilde
+A=matrix(c(rbind(XTX,R),rbind(t(R),Nulm)),63,63)
+Ainv=solve(A)
+P=Xtilde%*%Ainv[1:37,1:37]%*%t(Xtilde)
+v=c()
+for(i in 1:length(y))
+{
+  v=c(v,(ytilde[i]-(P%*%ytilde)[i])/sqrt(1-P[i,i]))
+}
+v

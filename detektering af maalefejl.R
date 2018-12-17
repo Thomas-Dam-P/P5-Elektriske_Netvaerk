@@ -67,7 +67,8 @@ res0=ytilde-P%*%ytilde
 plot((ytilde-P%*%ytilde)[1:18])#strømstyrker
 plot((ytilde-P%*%ytilde)[19:37])#spændinger
 #Indfører målefejl, og tester om den kan detekteres med standardiserede residualer:
-y[29]=440
+y
+y[2]=1
 ytilde=invsqrtSigma%*%y
 P=Xtilde%*%Ainv[1:37,1:37]%*%t(Xtilde)
 v=c()
